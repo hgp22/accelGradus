@@ -89,7 +89,7 @@ export default function TestGenerationPage() {
           <div className="flex items-center gap-2">
             <Link href="/dashboard" className="flex items-center gap-2">
               <BookOpen className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">TestGenius</span>
+              <span className="text-xl font-bold">accelGrading</span>
             </Link>
           </div>
 
@@ -539,7 +539,7 @@ export default function TestGenerationPage() {
 
       <footer className="border-t py-4">
         <div className="container flex justify-between items-center">
-          <div className="text-sm text-muted-foreground">© {new Date().getFullYear()} TestGenius</div>
+          <div className="text-sm text-muted-foreground">© {new Date().getFullYear()} accelGrading</div>
           <div className="flex gap-4">
             <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")}>
               Dashboard

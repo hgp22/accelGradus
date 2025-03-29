@@ -9,7 +9,7 @@ export default function LandingPage() {
         <div className="container flex items-center justify-between py-4">
           <div className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">TestGenius</span>
+            <span className="text-xl font-bold">accelGrading</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="#features" className="text-sm font-medium hover:text-primary">
@@ -183,7 +183,7 @@ export default function LandingPage() {
           <div className="container flex flex-col items-center text-center">
             <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Testing Process?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mb-10">
-              Join thousands of educators who are saving time and improving student outcomes with TestGenius.
+              Join thousands of educators who are saving time and improving student outcomes with accelGrading.
             </p>
             <Link href="/register">
               <Button size="lg">Get Started Today</Button>
@@ -196,10 +196,10 @@ export default function LandingPage() {
         <div className="container flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center gap-2 mb-4 md:mb-0">
             <BookOpen className="h-5 w-5 text-primary" />
-            <span className="font-semibold">TestGenius</span>
+            <span className="font-semibold">accelGrading</span>
           </div>
           <div className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} TestGenius. All rights reserved.
+            © {new Date().getFullYear()} accelGrading. All rights reserved.
           </div>
         </div>
       </footer>
