@@ -1,0 +1,39 @@
+{
+  "name": "ai-chat",
+  "version": "1.0.0",
+  "description": "tool to help send and receive information about tests, questions...",
+  "main": "code.js",
+  "type": "module",
+  "scripts": {
+    "start2": "ts-node src/test.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/code.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hgp22/accelGradus.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hgp22/accelGradus/issues"
+  },
+  "homepage": "https://github.com/hgp22/accelGradus#readme",
+  "dependencies": {
+    "@langchain/core": "^0.3.43",
+    "@lmstudio/sdk": "^1.1.0",
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "fs": "^0.0.1-security",
+    "langchain": "^0.3.19",
+    "llamaai": "^1.0.4",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.90.0",
+    "pdf-extract": "^1.0.11",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
