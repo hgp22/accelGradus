@@ -12,7 +12,7 @@ import { exec } from "child_process";
 
 //const exec = require('child_process').exec;
 
-async function extractTextFromPDF(pdfPath) {
+export async function extractTextFromPDF(pdfPath) {
 
     const command = `pdftotext -layout ${pdfPath} _.txt`
     const dataBuffer = fs.readFileSync(pdfPath);
@@ -66,9 +66,7 @@ const grandmaIsDying = `
     like a title they will kill her :^(. Please help me save my grandma.`;
 
 
-
-
-const genQuestions = async (filesL, prompt) => {
+export const genQuestions = async (filesL, prompt) => {
     
     let fileContent = await getFileContent(filesL);
 
@@ -127,9 +125,7 @@ const genQuestions = async (filesL, prompt) => {
                 // - harder (string): The harder version of the question
                 // - explanation (string): The explanation of the answer
                 { role: "user", content: summarizedContent }
-
             ],
-           
             max_tokens: 1000 // Increase token limit if needed
         });
         
@@ -151,7 +147,7 @@ const genQuestions = async (filesL, prompt) => {
     }
 };
 
-const makeQuestionEasierHarder = async (question,difficulty) => {
+export const makeQuestionEasierHarder = async (question,difficulty) => {
     const prompt = `Make the question ${difficulty} i only want 1 question ` + JSON.stringify(question) + grandmaIsDying;
     try{
         const response = await client.chat.completions.create({
@@ -209,7 +205,7 @@ let question2 = {
 
 //makeQuestionEasierHarder(question,"easier")
 //makeQuestionEasierHarder(question2,"harder");
-genQuestions(files, 'Generate a questions about functional programming for undergrads.')
+//genQuestions(files, 'Generate a questions about functional programming for undergrads.')
 
 
 
