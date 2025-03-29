@@ -44,7 +44,7 @@ export default function RegisterPage() {
         <div className="flex justify-center mb-6">
           <Link href="/" className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">TestGenius</span>
+            <span className="text-xl font-bold">accelGrading</span>
           </Link>
         </div>
 

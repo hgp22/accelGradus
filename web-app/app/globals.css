@@ -4,6 +4,9 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  padding: 4%;
+  justify-content: center;
+  /* Centers content horizontally */
 }
 
 @layer utilities {
@@ -11,6 +14,7 @@ body {
     text-wrap: balance;
   }
 }
+
 
 @layer base {
   :root {

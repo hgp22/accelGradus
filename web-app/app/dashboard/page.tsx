@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation"
 
 export default function DashboardPage() {
   const router = useRouter()
-  const [userName] = useState("Dr. Smith")
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -17,11 +16,11 @@ export default function DashboardPage() {
         <div className="container flex items-center justify-between py-4">
           <div className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">TestGenius</span>
+            <span className="text-xl font-bold">accelGrading</span>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="text-sm font-medium">Welcome, {userName}</div>
+            <div className="text-sm font-medium">Logout</div>
             <Button variant="ghost" size="icon" onClick={() => router.push("/")}>
               <LogOut className="h-5 w-5" />
               <span className="sr-only">Log out</span>
@@ -121,16 +120,8 @@ export default function DashboardPage() {
 
       <footer className="border-t py-4">
         <div className="container flex justify-between items-center">
-          <div className="text-sm text-muted-foreground">© {new Date().getFullYear()} TestGenius</div>
+          <div className="text-sm text-muted-foreground">© {new Date().getFullYear()} accelGrading</div>
           <div className="flex gap-4">
-            <Button variant="ghost" size="sm" onClick={() => router.push("/profile")}>
-              <User className="h-4 w-4 mr-2" />
-              Profile
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => router.push("/settings")}>
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
           </div>
         </div>
       </footer>
