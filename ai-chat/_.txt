@@ -1,0 +1,385 @@
+                                                                                                                         O que é a programação funcional ?
+
+                                                                                                                         • É um estilo de programação em que o mecanismo básico de computação é a
+                                                                                                                           aplicação de funções a argumentos.
+
+ Programação Funcional                                                                                                   • Uma linguagem de programação que suporte e encoraje esta forma de
+                                                                                                                           programação diz-se funcional.
+ 1º Ano
+                                                                                                                         • É um estilo de programação declarativo (em que um programa é um conjunto
+                                                                                                                           de declarações que descrevem a relação entre input e output), ao invés de
+                                                                                                                           um estilo imperativo (em que o programa é uma sequência de instruções que
+                                                                                                                           vai alterando o estado, o valor das variáveis).
+
+ Maria João Frade - Dep. Informática, UM
+
+
+
+
+                                                     0! = 1
+Exemplo da função factorial                          n! = n . (n-1)!
+                                                                                                                         Programa resumido
+Haskell (uma linguagem declarativa)
+                                                                                                                         Esta UC corresponde a uma introdução ao paradigma funcional de programação, tendo por base
+fact 0 = 1                          As equações que são usadas na definição de fact são equações matemáticas
+                                                                                                                         a linguagem programação Haskell (uma linguagem puramente funcional).
+fact n = n * fact (n-1)             Elas indicam que o lado esquerdo e o lado direito têm o mesmo valor.
+                                    O valor dos identificadores é imutável.
+                                                                                                                          1. Aspectos básicos da linguagem Haskell: valores, expressões e tipos. O mecanismo de
+                                                                                                                          avaliação. Inferência de tipos. Definições multi-clausais de funções. Polimorfismo.
+C (uma linguagem imperativa)                                                                                              2. Listas. Funções recursivas sobre listas. Modelação de problemas usando listas.
+                                                                                                                          3. Algoritmos de ordenação de listas: insertion sort, quick sort e merge sort.
+int factorial(int n)
+                                   Isto é muito diferente do uso do = nas linguagens imperativas como o C. Por            4. Ordem superior. Padrões de computação. Programação com funções de ordem superior.
+{ int i, r;
+                                   exemplo, a instrução i = i+1 representa uma atribuição (o valor anterior de i é
+  i = 1;                           destruído, e o novo valor passa a ser o anterior mais 1). Portanto, i é redefinido.    5. Tipos algébricos. Definição de novos tipos e sua utilização na modelação de problemas.
+  r = 1;
+  while (i<=n) {                                                                                                          6. Árvores. Árvores binárias, árvores de procura, árvores irregulares e algoritmos associados.
+     r = r*i;                                                                                                             7. Classes. O mecanismo de classes no tratamento do polimorfismo e da sobrecarga de funções.
+     i = i+1; }
+  return r;                                                                                                               8. IO. O tratamento puramente funcional do input/output. O monade IO.
+}
+Resultados de aprendizagem                                                          Método de avaliação
+                                                                                                  Nota Final = (Nota do 1º teste) x (Nota do 2º teste)
+• Resolver problemas de programação decompondo-os em problemas mais
+  pequenos.
+                                                                                    • 1º teste: uma questão selecionada aleatoriamente de um conjunto de questões
+• Desenvolver e implementar algoritmos recursivos sobre listas e sobre árvores.      simples, previamente divulgado. (Notas 0 ou 1)
+
+• Desenvolver programas tirando partido da utilização das funções de ordem          • 2º teste: prova escrita sobre toda a matéria. (Notas de 0 a 20)
+  superior.
+
+• Definir tipos algébricos enquadrá-los na hierarquia de classes e programar        Datas previstas para as avaliações
+  com esses tipos.                                                                                                          1º teste: 19 de Novembro
+                                                                                                                            2º teste: 20 de Janeiro
+• Escrever programas interativos.                                                                                           Exame de recurso: 10 de Fevereiro
+
+
+
+
+Bibliografia                                                                        Características das linguagens funcionais
+
+  • Fundamentos da Computação. Livro II: Programação Funcional.                     • O mecanismo básico de programação é a definição e aplicação de funções.
+   José Manuel Valença e José Bernardo Barros. Universidade Aberta.
+                                                                                    • Funções são entidades de 1ª classe, isto é, podem ser usadas como qualquer
+                                                                                      outro objecto: passadas como parâmetro, devolvidas como resultado, ou mesmo
+  • Programming in Haskell. Graham Hutton. Cambridge University Press, 2016.          armazenadas em estruturas de dados.
+  • Haskell: the craft of functional programming. Simon Thompson. Addison-Wesley.   • Grande flexibilidade, capacidade de abstração e modularização do processamento
+                                                                                      de dados.
+  • www.haskell.org/documentation
+  • Slides das aulas teóricas e fichas práticas: elearning.uminho.pt                • Os programas são concisos, fáceis de manter e rápidos de desenvolver.
+Cronologia                                                                                                   Haskell
+1930’s - Lambda calculus: uma teoria matemática the funções. (Alonso Church, Haskell Curry)                  Haskell is a general purpose, purely functional programming language incorporating many recent innovations in
+                                                                                                             programming language design. Haskell provides higher-order functions, non-strict semantics, static polymorphic
+                                                                                                             typing, user-defined algebraic datatypes, pattern-matching, list comprehensions, a module system, a monadic
+1950’s - Lisp: a 1ª ling. prog. funcional, sem tipos, impura. (John McCarthy)
+                                                                                                             IO system, and a rich set of primitive datatypes, including lists, arrays, arbitrary and fixed precision integers, and
+                                                                                                             floating-point numbers. Haskell is both the culmination and solidification of many years of research on non-strict
+1960’s - ISWIN: a 1ª ling. prog. funcional pura. (Peter Landin)                                              functional languages.
+                                                                                                                                                                                                         (The Haskell 2010 Report)
+1970’s - FP: ênfase nas funções de ordem superior e no raciocínio sobre programas. (John Backus)
+         ML: a 1ª ling. funcional moderna, com polimorfismo e inferência de tipos. (Robin Milner)
+
+1980’s - Miranda: ling. funcional com lazy evaluation, polimorfismo e inferência de tipos. (David Turner)     www.haskell.org
+1990’s - Haskell: ling. funcional pura, lazy, com um sistema de tipos extremamente evoluído, criada
+         por um comité de académicos.
+
+2000’s - Publicação do Haskell Report: a 1ª versão estável da linguagem, actualizada em 2010.                                                                               Contém o compilador de Haskell GHC,
+                                                                                                                                                                            que vamos usar.
+2010’s - Haskell Platform: distribuição standard do GHC (Glasgow Haskell Compiler), que inclui
+         bibliotecas e ferramentas de desenvolvimento.
+
+
+
+
+Glasgow Haskell Compiler                                                                                    O interpretador GHCi
+                                                                                                            O interpretador arranca, a partir de um terminal, com o comando ghci
+    • Principal compilador de Haskell da actualidade.
+                                                                                                                      $ ghci
+    • Usado na indústria.                                                                                             GHCi, version … : http://www.haskell.org/ghc/. :? for help
+    • Inclui um compilador e um interpretador de Haskell:                                                             Prelude>
+
+       • GHC - o compilador que a partir do programa Haskell cria código executável.                        • O prompt > indica que o GHCi está pronto para avaliar.
+       • GHCi - o interpretador que actua como uma “máquina de calcular”. Tem uma                           • Prelude é o nome da biblioteca que é carregada, por omissão, no arranque do GHCi e
+         natureza interactiva adequada ao desenvolvimento passo a passo de um programa.                        que disponibiliza uma vasta lista de funções.
+         É o que usaremos nas aulas.
+                                                                                                                      Prelude> 5+3*2
+         O ciclo de funcionamento do interpretador é o seguinte:                                                      11
+                                                                                                                      Prelude> sqrt 9
+                                                                                                                      3.0
+                lê uma expressão, calcula o seu valor e apresenta o resultado
+A biblioteca Prelude                                                                         Aplicação de funções
+O Prelude é a biblioteca Haskell que contém as declarações de tipos, funções e classes que    A notação usada em Haskell para a aplicação de funções difere da notação matemática
+constituem o núcleo central da linguagem Haskell. É sempre carregada por omissão.             tradicional.
+
+Por exemplo, tem muitas funções sobre listas:                                                • Na matemática, a aplicação de funções é denotada usando parêntesis e multiplicação
+                                                                                               denotada por um espaço.
+    > length [4,2,6,3,1]                            > product [1..5]                         • Em Haskell, a aplicação de funções é denotada por um espaço e multiplicação denotada por *.
+    5                                               120
+    > head [4,2,6,3,1]                              > [1,2,3] ++ [4,5]                                 Notação matemática                         Notação Haskell
+    4                                               [1,2,3,4,5]
+    > tail [4,2,6,3,1]                              > head (tail [1..5])                               f(a,b) + c d                               f a b + c*d
+    [2,6,3,1]                                       2
+    > reverse [4,2,6,3,1]                           > take 2 [3,4,7,1,8]
+    [1,3,6,2,4]                                     [3,4]                                     Em Haskell a aplicações de funções tem prioridade máxima sobre todos os outros operadores.
+    > last [1..5]                                   > drop 2 [3,4,7,1,8]
+    5                                               [7,1,8]
+    > sum [4,2,6,3,1]                               > length [4,2,1] + head [7,5]
+                                                                                                                       f a + b significa (f a) + b
+    16                                              10
+
+
+
+
+                                                                                             Haskell scripts
+ Aplicação de funções                                                                        • Um programa Haskell é constituído por um, ou mais, ficheiros de texto que contêm as
+                                                                                               definições das novas funções, tipos e classes usados na resolução de um dado problema.
+                                                                                             • A esses ficheiros Haskell costumam-se chamar scripts, pelo que o nome dos ficheiros Haskell
+            Notação matemática                       Notação Haskell                           termina normalmente com .hs (de Haskell script).
+
+            f(x)                                      f x                                    • No desenvolvimento de um programa Haskell é útil manter duas janelas abertas: uma com o
+                                                                                               editor de texto onde se vai desenvolvendo o programa, e outra com o GHCi para ir testando as
+            f(x,y)                                    f x y                                    funções que se vão definindo.
+
+            f(g(x))                                   f (g x)
+            f(x,g(x))                                 f x (g x)
+            f(a) + b                                  f a + b
+Haskell scripts                                                                                 Alguns comandos do GHCi
+Mantendo o GHCi aberto podemos acrescentar mais definições ao ficheiro aula1.hs e depois
+recarrega-lo no GHCi para as testar.                                                                                Comando
+Por exemplo, podemos acrescentar ao ficheiro a definição da função factorial                                        :?                   Mostra todos os comandos disponíveis
+
+                                   fact 0 = 1                                                                       :load nome           Carrega no GHCi o ficheiro nome
+                                   fact n = n * fact (n-1)
+                                                                                                                    :reload              Carrega de novo o ficheiro corrente
+E depois recarrega-lo no GHCi      *Aula1> :reload
+                                   [1 of 1] Compiling Aula1      (aula1.ha. interpreted)                            :type expressão      Indica o tipo de uma expressão
+                                   Ok, one module loaded
+                                   *Aula1> fact 5                                                                   :quit                Sai do GHCi
+                                   120
+                                   *Aula1>
+
+
+Repare na mudança de nome do prompt para *Aula1> que é o nome do módulo que está no                Pode usar apenas a primeira letra do comando. Por exemplo,      :l aula1.hs
+ficheiro aula1.hs. Neste momento tem disponíveis no interpretador todas as funções do Prelude
+e do módulo Aula1.
+
+
+
+
+ Valores, expressões e tipos                                                                    Tipos
+ • Os valores são as entidades básicas da linguagem Haskell. São os elementos atómicos.         • Um tipo é um nome que denota uma coleção de valores. Por exemplo,
+ • Uma expressão ou é um valor ou resulta de aplicar funções a expressões.
+ • O interpretador actua como uma calculadora: lê uma expressão, calcula o seu valor e               • O tipo Bool contém os dois valores lógicos: True e False
+   apresenta o resultado.                                                                            • O tipo Integer contém todos os números inteiros: …, -2, -1, 0, 1, 2, 3, …
+                                    > 5.3 + 7.2 * 0.1
+                                    6.02
+                                    > 2 < length [4,2,5,1]
+                                                                                                • As funções só podem ser aplicadas a argumentos de tipo adequado. Por exemplo,
+                                    True
+                                    > not True
+                                    False
+                                                                                                                > 2 + True                          Porque + deve ser aplicada a
+                                                                                                                error: …                            números e True não é um número.
+  • Um tipo é um nome que denota uma coleção de valores.
+  • Se da avaliação de uma expressão e resultar um valor do tipo T, então dizemos que a
+    expressão e tem tipo T, e escrevemos
+                                                   e :: T                                       • Se não houver concordância entre o tipo das funções e os seus argumentos, o programa é
+                                                                                                  rejeitado pelo compilador.
+    Por exemplo, > :type not True
+                 not True :: Bool
+Tipos                                                                                 Tipos básicos
+• Toda a expressão Haskell bem formada tem um tipo que é automaticamente               Bool      Booleanos                        True, False
+  calculado em tempo de compilação por um mecanismo chamado inferência de tipos.
+                                                                                       Char      Caracteres                       ‘a’, ‘b’, ‘A’, ‘3’, ‘\n’, …
+• Por isso se diz que a linguagem Haskell é “statically typed”.
+                                                                                       Int       Inteiros de tamanho limitado     5, 7, 154243, -3452, …
+• Todos os erros de tipo são encontrados em tempo de compilação, o que torna os
+  programas mais robustos.
+                                                                                       Integer Inteiros de tamanho ilimitado      2645611806867243336830340043, …
+
+• Os tipos permitem assim programar de forma mais produtiva, com menos erros.          Float      Números de vírgula flutuante    55.3,    23E5, 743.2e12, …
+
+• Num programa Haskell não é obrigatório escrever os tipos, o compilador infere-os,    Double    Números de vírgula flutuante de dupla precisão   55.3,   23.5E5, …
+  mas é boa prática escreve-los pois é uma forma de documentar o código.
+
+                                                                                       ()        Unit                             ()
+
+
+
+
+Tipos compostos                                                                       Tuplos
+• Tuplos - sequências de tamanho fixo de elementos de diferentes tipos                Um tuplo é uma sequência de tamanho fixo de elementos que podem ser de
+               (5, True) :: (Int, Bool)                                               diferentes tipos.
+               (False, 3.5, ’b’) :: (Bool, Float, Char)
+                                                                                      (T1,T2,…,Tn)            é o tipo dos tuplos de tamanho n, cujo 1º elemento é de tipo T1,
+• Listas - sequências de tamanho variável de elementos de um mesmo tipo                                       o 2º elemento é de tipo T2, …, e na posição n tem um elemento
+               [1,2,3,4,5] :: [Int]                                                                           de tipo Tn .
+               [True, True, False] :: [Bool]
+                                                                                      Exemplos:         (‘C’, 2, ‘A’) :: (Char, Int, Char)
+• Funções - mapeamento de valores de um tipo (o domínio da função) em
+  valores de outro tipo (o contra-domínio da função)                                                    (True, 1, False, 0) :: (Bool, Int, Bool, Int)
+               fact :: Integer -> Integer                                                               (3.5, (‘a’,True), 20) :: (Float, (Char,Bool), Int)
+               fact 0 = 1
+               fact n = n * fact (n-1)
+Listas                                                                           Funções
+                                                                                 Uma função é um mapeamento de valores de um tipo (o domínio da função)
+As listas são sequências de tamanho variável de elementos do mesmo tipo.
+                                                                                 em valores de outro tipo (o contra-domínio da função)
+
+  [T]        é o tipo das listas de elementos do tipo T.
+                                                                                  T1 -> T2              é o tipo das funções que recebem valores do tipo T1
+                                                                                                        e devolvem valores do tipo T2.
+Exemplos:             [10,20,30] :: [Int]
+
+                      [10, 20, 6, 19, 27, 30] :: [Int]
+                                                                                  Exemplos:                      even :: Int -> Bool
+                      [True,True,False,True] :: [Bool]
+                                                                                                                 odd :: Int -> Bool
+                      [(‘a’,True), (‘b’,False)] ::[(Char,Bool)]
+                                                                                                                 not :: Bool -> Bool
+                      [[3,2,1], [4,7,9,2], [5]] :: [[Int]]
+
+
+
+
+Funções com vários argumentos                                                    Curried functions
+Uma função com vários argumentos pode ser codificada de duas formas:             soma :: (Int,Int) -> Int                     soma e add produzem o mesmo resultado final, mas
+                                                                                                                              soma recebe os dois argumentos ao mesmo tempo,
+                                                                                 add :: Int -> (Int -> Int)                   enquanto add recebe um argumento de cada vez.
+• Usando tuplos:                                    soma :: (Int,Int) -> Int
+                                                    soma (x,y) = x + y
+  soma recebe um par de inteiros (x,y) e                                         • As funções que recebem os seus argumentos um de cada vez dizem-se “curried” em honra do
+  devolve o resultado inteiro x+y.                                                 matemático Haskell Curry que as estudou.
+
+                                                                                 • Funções que recebem mais do que dois argumentos podem ser curried retornando funções
+• Retornando funções como resultado:                add :: Int -> (Int -> Int)     aninhadas.
+                                                    add x y = x + y                                  mult :: Int -> (Int -> (Int -> Int))
+                                                                                                     mult x y z = x * y * z
+   add recebe um inteiro x e devolve uma função (add x).
+   Depois esta função recebe o inteiro y e devolve o resultado x+y.              mult recebe um inteiro x e devolve uma função (mult x), que por sua vez recebe o inteiro y e
+                                                                                 devolve a função (mult x y), que finalmente recebe o inteiro z e devolve o resultado x*y*z.
+Porque é que as funções curried são úteis?                                              Convenções
+                                                                                        Para evitar o uso excessivo de parêntesis quando se usam funções curried
+  • As funções curried são mais flexíveis porque é possível gerar novas                 são adotadas as seguintes convenções:
+     funções, aplicando parcialmente uma função curried.
+                                                                                        • A seta -> associa à direita
+                            add 1 :: Int -> Int
+                                                                                            Int -> Int -> Int -> Int                Significa Int -> (Int -> (Int -> Int))
+
+
+  • As funções Haskell são normalmente definidas na forma curried.
+                                                                                        • A aplicação de funções associa à esquerda
+                            take :: Int -> [Int] -> [Int]
+                                                                                               mult x y z               Significa ((mult x) y) z
+                            take 5 :: [Int] -> [Int]
+
+
+
+
+Funções polimórficas                                                                    Funções polimórficas
+Há funções às quais é possível associar mais do que um tipo concreto. Por exemplo, a    As variáveis de tipo podem ser instanciadas por diferentes tipos consoante as
+função length (que calcula o comprimento de uma lista) pode ser aplicada a quaisquer    circunstâncias.
+listas independentemente do tipo dos seus elementos.                                                                    length :: [a] -> Int
+
+                             > length [3,2,2,1,4]
+                                                                                               > length [3,2,2,1,4]                    a = Int
+                             5
+                                                                                               5
+                             > length [True,False]
+                             2
+                                                                                               > length [True,False]                   a = Bool
+Um função diz-se polimórfica se o seu tipo contém variáveis de tipo (representadas             2
+por letras minúsculas).
+                                                                                        • As variáveis de tipo começam por letras minúsculas (normalmente usam-se as
+  length :: [a] -> Int                                                                   letras a, b, c, etc).
+                                     Para qualquer tipo a, a função length recebe uma
+                                     lista de valores do tipo a e devolve um inteiro.   • O nome dos tipos concretos começa sempre por uma letra maiúscula (ex:
+                                                                                         Int, Bool, Float, etc)
+Funções polimórficas                                                       Sobrecarga (overloading) de funções
+                                                                           Considere os seguintes exemplos:
+A maioria das funções da biblioteca Prelude são polimórficas.                                                   > 3 + 2
+                                                                                                                                        Qual será o tipo da soma (+) ?
+                                                                                                                5
+                  head :: [a] -> a                                                                              > 10.5 + 1.7
+                                                                                                                12.2
+                  tail :: [a] -> [a]
+                                                                           Note que a -> a -> a é um tipo demasiado permissivo para a função (+), pois não é
+                  take :: Int -> [a] -> [a]                                possível somar elementos de qualquer tipo > ‘a’ + ‘b’
+                                                                                                                             :error …
+                  fst :: (a,b) -> a
+                  snd :: (a,b) -> b                                        O Haskell resolve o problema com restrições de classes
+                  id :: a -> a
+                                                                                                                                Para qualquer tipo numérico a, a função (+)
+                                                                           (+) :: Num a => a -> a -> a
+                  reverse :: [a] -> [a]                                                                                         recebe dois valores do tipo a e devolve um
+                                                                                                                                valor do tipo a.
+                  zip :: [a] -> [b] -> [(a,b)]
+
+
+
+
+Sobrecarga (overloading) de funções                                        Class constraints
+Uma função polimórfica diz-se sobrecarregada se o seu tipo contém uma ou    O Haskell tem muitas classes mas, por agora, apenas precisamos de ter a noção de que
+mais restrições de classes.                                                 existem as seguintes
+                            (+) :: Num a => a -> a -> a
+                                                                                Num    - a classe dos tipos numéricos (tipos sobre os quais estejam definidas
+                                                                                operações como a soma e a multiplicação).
+                     > 3 + 2                 a = Int
+                     5                                                          Eq      - a classe dos tipos que têm o teste de igualdade definido.
+                     > 10.5 + 1.7            a = Float
+                     12.2                                                       Ord     - a classe dos tipos que têm uma relação de ordem definida sobre os
+                     > ’a’ + ‘b’                 Char não é um                  seus elementos.
+                     error: …                    tipo numérico
+                                                                                                         (+) :: Num a => a -> a -> a
+ Mais exemplos:     sum :: Num a => [a] -> a                                                             (==) :: Eq a => a -> a -> Bool
+
+                    (*) :: Num a => a -> a -> a                                                          (<) :: Ord a => a -> a -> Bool
+                                                                             Mais tarde estudaremos em mais detalhe o mecanismo de classes do Haskell.
+                    product :: Num a => [a] -> a
+!!! Aviso !!!                                                                                          Class constraints
+Na versão actual do GHCi, se perguntarmos o tipo de certas funções sobre listas temos uma surpresa!!                                                              > elem 3 [1,2,3,4,5]
+                                                                                                                                                                  True
+                                                                                                                                                                  > elem 7 [1,2,3,4,5]
+                           > :type sum                                                                   Qual será o tipo das funções elem e max ?                False
+                           sum :: (Foldable t, Num a) => t a -> a                                                                                                 > max 35 28
+                                                                                                                                                                  35
+                                                                                                                                                                  > max 5.6 10.7
+Este é um tipo mais geral do que sum :: Num a => [a] -> a mas como as listas pertencem à
+                                                                                                                                                                  10.7
+classe Foldable, quando aplicamos sum a uma lista de números, este é o tipo efectivo da função sum.
+
+
+      Ao longo das aulas iremos sempre apresentar o tipo destas funções usando listas em vez
+      da classe Foldable, para simplificar a apresentação.                                              elem :: Eq a => a -> [a] -> Bool                           Porque se usa a função (==) na sua implementação.
+
+
+
+
+      Sempre que virem a classe Foldable, num tipo das funções do Prelude podem entender
+      isso como sendo o tipo das listas.
+                                                                                                        max :: Ord a => a -> a -> a                        Porque se usa a função (<) na sua implementação.
+
+
+
+
+Mais alguns operadores do Prelude                                                                      Definição de funções
+                                                                                                       • A definição de funções faz-se através de uma sequência de equações da forma:
+        Lógicos:         && (conjunção), || (disjunção), not (negação)
+                                                                                                                                   nome arg1 arg2 … argn = expressão
+
+        Numéricos:       +, -, *, / (divisão de reais), ^ (exponenciação com inteiros),
+                                                                                                       • O nome das funções começa sempre por letra minúscula ou underscore.
+                         div (divisão inteira), mod (resto da divisão inteira),
+                                                                                                       • Quando se define uma função podemos indicar o seu tipo. No entanto, isso não é obrigatório.
+                        ** (exponenciações com reais), log, sin, cos, tan, …
+                                                                                                       • O tipo de cada função é inferido automaticamente pelo compilador.
+        Relacionais:     == (igualdade), /= (desigualdade), <, <=, >, >=                               • O compilador infere o tipo mais geral que se pode associar à função. No entanto, é possível
+                                                                                                         atribuir à função um tipo mais especifico.
+
+        Condicional: if ... then ... else ...                                                                swap :: (a,b) -> (b,a)                   troca :: (Int,Char) -> (Char,Int)
+                                                                                                             swap (x,y) = (y,x)                       troca (x,y) = (y,x)
+                           :: Bool           :: a
+                                                                                                       • É boa prática de programação indicar o tipo das funções definidas nas scripts Haskell.
+
