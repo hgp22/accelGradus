@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 
 export default function DashboardPage() {
   const router = useRouter()
-  const [userName] = useState("Dr. Smith")
+  const [userName] = useState("Dr. Henrique Alvin Gonçalves")
 
   return (
     <div className="min-h-screen flex flex-col">
