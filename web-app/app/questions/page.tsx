@@ -147,7 +147,7 @@ export default function QuestionsPage() {
                     > Add Question
                     </Button>
                     <Button variant="secondary" onClick={() => router.push("/test-generation")}>
-                        Back to Question Banks
+                        Generate a Test
                     </Button>
                     <Button variant="outline" onClick={() => router.push("/question-banks")}>
                         Back to Question Banks
