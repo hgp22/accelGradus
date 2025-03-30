@@ -1,0 +1,25 @@
+[
+    {
+      "question": "What is the primary advantage of using currying in Haskell? (MCQ)",
+      "answer": "a) It allows for more efficient code",
+      "options": ["a) It allows for more efficient code", "b) It enables more complex data structures", "c) It simplifies type declaration", "d) It enables lazy evaluation"],
+      "category": "Functional Programming"
+    },
+    {
+      "question": "Write a Haskell function that takes a list of numbers as input and returns the first number that is greater than 5. If no such number exists, return None using the function `filter` and `head`. (Short Answer)",
+      "answer": "filter (> 5) $ filter (<= 5) xs",
+      "category": "Functional Programming"
+    },
+    {
+      "question": "Consider a function `addX` that takes an integer `x` and an integer `y` as input and returns their sum. Explain why currying `addX` is beneficial in Haskell. (Conceptual)",
+      "answer": "Currying `addX` allows for partial application and argument specifics, enabling more flexible function usage.",
+      "category": "Functional Programming"
+    },
+    {
+      
+      "question": "Suppose we have a list of strings representing names and their corresponding ages. Write a Haskell function that uses `map`, `filter`, and a lambda function to create a new list containing only the names of individuals older than 25. Assume the list is in the format `['John 25', 'Alice 30', 'Bob 20']`. ",
+      "answer": "main = print $ map (\\(name, _) -> name) (filter (\\(name, age) -> age > 25) $ map (\\s -> let [n, a] = words s in (n, read a :: Integer)) ['John 25', 'Alice 30', 'Bob 20'])",
+      "category": "Functional Programming"
+    }
+]
+  

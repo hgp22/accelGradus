@@ -1,3 +1,5 @@
+//import { webpack } from 'next/dist/compiled/webpack/webpack'
+
 let userConfig = undefined
 try {
   userConfig = await import('./v0-user-next.config')
@@ -23,6 +25,17 @@ const nextConfig = {
     missingSuspenseWithCSRBailout: false,
   },
 }
+
+/*module.exports = {
+  webpack: (config, {isServer}) => {
+    if(!isServer){
+      config.node = {
+        fs: 'empty'
+      }
+    }
+    return config
+  }
+}*/
 
 mergeConfig(nextConfig, userConfig)
 
