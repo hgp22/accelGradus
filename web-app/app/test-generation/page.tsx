@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -14,40 +14,12 @@ import { BookOpen, LogOut, Wand2, Eye, Download } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
-// Mock data for question banks
-const mockQuestionBanks = [
-  {
-    id: 1,
-    name: "Calculus I",
-    description: "First-year calculus questions",
-    categories: ["Limits", "Derivatives", "Integrals", "Applications"],
-  },
-  {
-    id: 2,
-    name: "Linear Algebra",
-    description: "Questions on vectors and matrices",
-    categories: ["Vectors", "Matrices", "Eigenvalues", "Linear Systems"],
-  },
-  {
-    id: 3,
-    name: "Statistics 101",
-    description: "Introductory statistics",
-    categories: ["Probability", "Distributions", "Hypothesis Testing", "Regression"],
-  },
-  {
-    id: 4,
-    name: "Physics Mechanics",
-    description: "Questions on Newtonian mechanics",
-    categories: ["Forces", "Motion", "Energy", "Momentum"],
-  },
-]
-
 export default function TestGenerationPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const bankIdParam = searchParams.get("bankId")
 
-  const [selectedBank, setSelectedBank] = useState(bankIdParam ? Number(bankIdParam) : null)
+  const [selectedBank, setSelectedBank] = useState("")
   const [testName, setTestName] = useState("")
   const [testVersions, setTestVersions] = useState(3)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -63,7 +35,45 @@ export default function TestGenerationPage() {
   })
   const [previewGenerated, setPreviewGenerated] = useState(false)
 
-  const bank = mockQuestionBanks.find((b) => b.id === selectedBank)
+  //const bank = groupedQuestions.find((b) => b.id === selectedBank)
+
+
+  const [groupedQuestions, setGroupedQuestions] = useState<{ [key: string]: any[] }>({});
+
+  // Fetch question banks from the API and group by subject_course
+    useEffect(() => {
+      const fetchQuestionBanks = async () => {
+        try {
+          const response = await fetch("/api/questions");
+          if (!response.ok) {
+            throw new Error("Failed to fetch question banks");
+          }
+          const data = await response.json();
+  
+          // Group questions by subject_course
+          const grouped = data.questions.reduce((acc: { [key: string]: any[] }, question: any) => {
+            const course = question.subject_course || "Unknown Course";
+            if (!acc[course]) {
+              acc[course] = [];
+            }
+            acc[course].push(question);
+            return acc;
+          }, {});
+          setGroupedQuestions(grouped); // Update state with grouped questions
+        } catch (error) {
+          console.error("Error fetching question banks:", error);
+        } finally {
+          //setLoading(false);
+        }
+      };
+  
+      fetchQuestionBanks();
+      
+    }, []);
+
+  
+
+
 
   const handleCategoryToggle = (category: string) => {
     if (selectedCategories.includes(category)) {
@@ -131,44 +141,27 @@ export default function TestGenerationPage() {
                 <div className="space-y-2">
                   <Label htmlFor="question-bank">Question Bank</Label>
                   <Select
-                    value={selectedBank?.toString() || ""}
-                    onValueChange={(value) => setSelectedBank(Number(value))}
-                  >
-                    <SelectTrigger id="question-bank">
-                      <SelectValue placeholder="Select a question bank" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {mockQuestionBanks.map((bank) => (
-                        <SelectItem key={bank.id} value={bank.id.toString()}>
-                          {bank.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+  value={selectedBank !== null ? selectedBank.toString() : ""}
+  onValueChange={(value) => {
+    setSelectedBank(value); // Store the string value directly
+  }}
+>
+  <SelectTrigger id="question-bank">
+    <SelectValue placeholder="Select a question bank" />
+  </SelectTrigger>
+  <SelectContent>
+    {Object.keys(groupedQuestions).length > 0 ? (
+      Object.keys(groupedQuestions).map((key) => (
+        <SelectItem key={key} value={key}>
+          {key}
+        </SelectItem>
+      ))
+    ) : (
+      <p className="text-sm text-muted-foreground">Loading...</p>
+    )}
+  </SelectContent>
+</Select>
                 </div>
-
-                {bank && (
-                  <div className="space-y-2">
-                    <Label>Categories</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {bank.categories.map((category) => (
-                        <div key={category} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`category-${category}`}
-                            checked={selectedCategories.includes(category)}
-                            onCheckedChange={() => handleCategoryToggle(category)}
-                          />
-                          <label
-                            htmlFor={`category-${category}`}
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            {category}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 <div className="space-y-4">
                   <Label>Question Types</Label>
@@ -311,7 +304,7 @@ export default function TestGenerationPage() {
                     <div className="text-center space-y-2">
                       <h3 className="text-xl font-bold">{testName}</h3>
                       <p className="text-muted-foreground">Version: Blueprint</p>
-                      <p className="text-sm">Total Points: {totalQuestions * 5}</p>
+                      {/*<p className="text-sm">Total Points: {totalQuestions * 5}</p> */}
                     </div>
 
                     {questionTypes.multipleChoice && questionCounts.multipleChoice > 0 && (
@@ -320,6 +313,7 @@ export default function TestGenerationPage() {
                           Multiple Choice Questions ({questionCounts.multipleChoice})
                         </h4>
 
+                        ----------------------------
                         <div className="space-y-6">
                           <div className="space-y-2">
                             <p className="font-medium">1. What is the derivative of f(x) = x² + 3x - 2?</p>
@@ -345,29 +339,6 @@ export default function TestGenerationPage() {
                             </div>
                           </div>
 
-                          <div className="space-y-2">
-                            <p className="font-medium">2. Which of the following is an example of a limit?</p>
-                            <div className="grid grid-cols-2 gap-2">
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>a) f(x) = x²</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>b) ∫ x² dx</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border border-primary flex items-center justify-center">
-                                  <div className="h-2 w-2 rounded-full bg-primary"></div>
-                                </div>
-                                <span>c) lim(x→0) sin(x)/x</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>d) d/dx (x³)</span>
-                              </div>
-                            </div>
-                          </div>
 
                           <p className="text-muted-foreground text-sm italic">
                             + {questionCounts.multipleChoice - 2} more multiple choice questions
@@ -476,7 +447,7 @@ export default function TestGenerationPage() {
 
                 <div className="space-y-1">
                   <p className="text-sm font-medium">Question Bank</p>
-                  <p className="text-muted-foreground">{bank?.name || "Not selected"}</p>
+                  <p className="text-muted-foreground">{ selectedBank || "Not selected"}</p>
                 </div>
 
                 {selectedCategories.length > 0 && (
@@ -511,28 +482,18 @@ export default function TestGenerationPage() {
                   <p className="text-muted-foreground">{testVersions}</p>
                 </div>
 
+                {/*
                 <div className="pt-4 border-t">
                   <p className="text-sm font-medium">Estimated Completion Time</p>
                   <p className="text-muted-foreground">
                     {totalQuestions > 0 ? `${Math.ceil(totalQuestions * 1.5)} minutes per student` : "Not available"}
                   </p>
-                </div>
+                </div>*/}
+
               </CardContent>
             </Card>
 
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Need Help?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Our AI can help you create effective tests based on your teaching materials and learning objectives.
-                </p>
-                <Button variant="outline" className="w-full">
-                  View Test Creation Guide
-                </Button>
-              </CardContent>
-            </Card>
+      
           </div>
         </div>
       </main>
