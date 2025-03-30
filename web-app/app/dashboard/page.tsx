@@ -96,7 +96,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full" onClick={() => router.push("/test-generation/quick")}>
+              <Button variant="outline" className="w-full" onClick={() => router.push("/test-generation")}>
                 Generate
               </Button>
             </CardContent>
