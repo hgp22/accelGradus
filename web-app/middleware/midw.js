@@ -104,6 +104,50 @@ export async function deleteCourse(subject_course){
     }
 }
 
+export async function deleteQuestion(category, question_text, subject_course) {
+    let pool;
+    try {
+        // Create a connection pool
+        pool = mysql.createPool({
+            host: HOST.split(':')[0],
+            port: HOST.split(':')[1],
+            user: USER,
+            password: PASSWORD,
+            database: DATABASE,
+            ssl: {}, // Enable SSL if required
+        });
+
+        /*
+        DELETE FROM question_bank WHERE category = 'testetsete';
+        */
+
+        /*
+
+insert into question_bank (category, question_text, subject_course)
+values ('Algebra', 'Whats is the value of a? a + 34 = 4', 'Math');
+        */
+
+        // Use parameterized query to safely insert data into the database
+        const query = `
+            delete from question_bank where category=? and question_text=? and subject_course=?;`;
+        const values = [category, question_text, subject_course];
+
+        // Execute the query
+        const [result] = await pool.query(query, values);
+
+        console.log('Question added successfully:', result);
+
+        return { success: true };
+    } catch (err) {
+        console.error('ERROR', err);
+        return { success: false, message: 'An error occurred during login' };
+    } finally {
+        if (pool) {
+            await pool.end(); // Close the connection pool
+        }
+    }
+}
+
 export async function create( category, question_text, subject_course) {
 
     let pool;
