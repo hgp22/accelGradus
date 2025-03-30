@@ -18,6 +18,9 @@ export default function QuestionsPage() {
 
     const [harder, setHarder] = useState(false);
     const [easier, setEasier] = useState(false);
+    const [genMuitas, setGenMuitas] = useState(false);
+
+    const [prompt, setPrompt] = useState("");
     const [selectedQuestion, setSelectedQuestion] = useState<any | null>(null);
     // Fetch questions from the API and filter by the selected course
     
@@ -27,21 +30,57 @@ export default function QuestionsPage() {
 
         return newQuestion;
     };
+
+    const addQuestion = async (l:any) => {
+        try {
+            const response = await fetch("/api/addquestion", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(l),
+            });
+            console.log(response);
+            if (!response.ok) {
+                throw new Error("Failed to add question");
+            }
+            alert("Question added successfully!");
+            //router.push("/question-banks");
+        } catch (error) {
+            console.error("Error adding question:", error);
+            alert("Failed to add question. Please try again.");
+        }
+    }
     
     useEffect(() => {
         const executeEffect = async () => {
+            if (genMuitas) {
+                const lista = await genQuestions([],prompt);
+                for (const l of lista) {
+                    console.log("elemtno da lista de perguntas", l);
+
+                    if (l?.question !== "") {
+                        const nova = {
+                            question_text: l.question,
+                            category: l.category ?? "General",
+                            subject_course: selectedCourse,
+                        } 
+
+                        console.log(nova)
+                        addQuestion(nova);
+                    }
+                }
+                setGenMuitas(false);
+            }
+
             if (harder) {
-                console.log("Making question harder", selectedQuestion);
-                const l = await handleD(selectedQuestion, "harder"); // Await the result
-                setQuestions((prevQuestions) => [...prevQuestions, l]); // Update state with resolved value
-                console.log("Questions", questions, l);
+                const l = await handleD(selectedQuestion, "harder");
+                addQuestion(l);
                 setHarder(false);
             }
             if (easier) {
-                //console.log("Making question easier", selectedQuestion);
                 const l = await handleD(selectedQuestion, "easier");
-                console.log("Questions", questions, l);
-                setQuestions((prevQuestions) => [...prevQuestions, l]);
+                addQuestion(l);
                 setEasier(false);
             }
 
@@ -70,10 +109,7 @@ export default function QuestionsPage() {
         };
 
         executeEffect();
-    }, [selectedCourse, harder, easier]);
-
-
-
+    }, [selectedCourse, harder, easier, genMuitas]);
 
 
     /*
@@ -94,6 +130,10 @@ export default function QuestionsPage() {
         setSelectedQuestion(question);
     }
 
+    const  handleGen = () => {
+        setGenMuitas(!genMuitas);
+    }
+
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -106,11 +146,39 @@ export default function QuestionsPage() {
                         className="shrink-0"
                     > Add Question
                     </Button>
+                    <Button variant="secondary" onClick={() => router.push("/test-generation")}>
+                        Back to Question Banks
+                    </Button>
                     <Button variant="outline" onClick={() => router.push("/question-banks")}>
                         Back to Question Banks
                     </Button>
                 </div>
             </header>
+
+            
+            <div className="container py-4">
+    <label htmlFor="questionInput" className="block text-sm font-medium text-gray-700">
+        Add a New Question
+    </label>
+    <div className="mt-2 flex items-center gap-4">
+        <input
+            type="text"
+            id="questionInput"
+            placeholder="Type your question here..."
+            className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+        />
+        <Button
+            onClick={() => {handleGen()}
+            }
+        >
+            Generate a Question with AI
+        </Button>
+    </div>
+</div>
+
+
 
             <main className="flex-1 container py-8">
                 {loading ? (

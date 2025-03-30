@@ -13,8 +13,11 @@ export default function AddQuestionPage() {
     const router = useRouter();
     const [questionText, setQuestionText] = useState("");
     const [category, setCategory] = useState("");
-    const [difficulty, setDifficulty] = useState("");
-    const [course, setCourse] = useState("");
+    //const [difficulty, setDifficulty] = useState("");
+    
+    const initialCourse = new URLSearchParams(window.location.search).get("course") || ""; // Get the course from the query parameter
+    const [course, setCourse] = useState(initialCourse);
+
 
     const handleAddQuestion = async () => {
         if (!questionText || !category || !course) {
@@ -49,11 +52,18 @@ export default function AddQuestionPage() {
         }
     };
 
+
+
+          
+
+
     return (
         <div className="min-h-screen flex flex-col">
             <header className="border-b">
                 <div className="container flex items-center justify-between py-4">
                     <h1 className="text-3xl font-bold">Add New Question</h1>
+                    
+
                     <Button variant="outline" onClick={() => router.push("/question-banks")}>
                         Back to Question Banks
                     </Button>

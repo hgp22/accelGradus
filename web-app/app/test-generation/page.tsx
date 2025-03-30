@@ -12,27 +12,29 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BookOpen, LogOut, Wand2, Eye, Download } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
+//import { Checkbox } from "@/components/ui/checkbox"
 
 export default function TestGenerationPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const bankIdParam = searchParams.get("bankId")
+  //const bankIdParam = searchParams.get("bankId")
 
   const [selectedBank, setSelectedBank] = useState("")
   const [testName, setTestName] = useState("")
   const [testVersions, setTestVersions] = useState(3)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [questionTypes, setQuestionTypes] = useState({
-    multipleChoice: true,
-    trueFalse: true,
-    shortAnswer: false,
+    multipleChoice: false,
+    trueFalse: false,
+    shortAnswer: true,
   })
   const [questionCounts, setQuestionCounts] = useState({
-    multipleChoice: 10,
-    trueFalse: 5,
-    shortAnswer: 2,
+    multipleChoice: 0,
+    trueFalse: 0,
+    shortAnswer: 0,
   })
+
+  
   const [previewGenerated, setPreviewGenerated] = useState(false)
 
   //const bank = groupedQuestions.find((b) => b.id === selectedBank)
@@ -141,26 +143,31 @@ export default function TestGenerationPage() {
                 <div className="space-y-2">
                   <Label htmlFor="question-bank">Question Bank</Label>
                   <Select
-  value={selectedBank !== null ? selectedBank.toString() : ""}
-  onValueChange={(value) => {
-    setSelectedBank(value); // Store the string value directly
-  }}
->
-  <SelectTrigger id="question-bank">
-    <SelectValue placeholder="Select a question bank" />
-  </SelectTrigger>
-  <SelectContent>
-    {Object.keys(groupedQuestions).length > 0 ? (
-      Object.keys(groupedQuestions).map((key) => (
-        <SelectItem key={key} value={key}>
-          {key}
-        </SelectItem>
-      ))
-    ) : (
-      <p className="text-sm text-muted-foreground">Loading...</p>
-    )}
-  </SelectContent>
-</Select>
+                      value={selectedBank !== null ? selectedBank.toString() : ""}
+                      onValueChange={(value) => {
+                        setSelectedBank(value); // Store the string value directly
+                        
+                        setQuestionCounts({
+                          ...questionCounts,
+                          shortAnswer:  groupedQuestions[selectedBank.toString()].length || 0,
+                        })
+                      }}
+                    >
+                      <SelectTrigger id="question-bank">
+                        <SelectValue placeholder="Select a question bank" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.keys(groupedQuestions).length > 0 ? (
+                          Object.keys(groupedQuestions).map((key) => (
+                            <SelectItem key={key} value={key}>
+                              {key}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <p className="text-sm text-muted-foreground">Loading...</p>
+                        )}
+                      </SelectContent>
+                    </Select>
                 </div>
 
                 <div className="space-y-4">
@@ -313,7 +320,7 @@ export default function TestGenerationPage() {
                           Multiple Choice Questions ({questionCounts.multipleChoice})
                         </h4>
 
-                        ----------------------------
+                        -------------------------------
                         <div className="space-y-6">
                           <div className="space-y-2">
                             <p className="font-medium">1. What is the derivative of f(x) = x² + 3x - 2?</p>
