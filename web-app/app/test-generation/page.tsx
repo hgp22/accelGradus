@@ -1,98 +1,154 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BookOpen, LogOut, Wand2, Eye, Download } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-//import { Checkbox } from "@/components/ui/checkbox"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BookOpen, LogOut, Wand2, Eye, Download } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
+import { jsPDF } from "jspdf";
 
 export default function TestGenerationPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  //const bankIdParam = searchParams.get("bankId")
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [selectedBank, setSelectedBank] = useState("")
-  const [testName, setTestName] = useState("")
-  const [testVersions, setTestVersions] = useState(3)
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedBank, setSelectedBank] = useState("");
+  const [testName, setTestName] = useState("");
+  const [testVersions, setTestVersions] = useState(3);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [questionTypes, setQuestionTypes] = useState({
     multipleChoice: false,
     trueFalse: false,
     shortAnswer: true,
-  })
+  });
   const [questionCounts, setQuestionCounts] = useState({
     multipleChoice: 0,
     trueFalse: 0,
     shortAnswer: 0,
-  })
-
-  
-  const [previewGenerated, setPreviewGenerated] = useState(false)
-
-  //const bank = groupedQuestions.find((b) => b.id === selectedBank)
-
-
+  });
+  const [previewGenerated, setPreviewGenerated] = useState(false);
   const [groupedQuestions, setGroupedQuestions] = useState<{ [key: string]: any[] }>({});
+  const [selectedQuestions, setSelectedQuestions] = useState<any[]>([]);
 
   // Fetch question banks from the API and group by subject_course
-    useEffect(() => {
-      const fetchQuestionBanks = async () => {
-        try {
-          const response = await fetch("/api/questions");
-          if (!response.ok) {
-            throw new Error("Failed to fetch question banks");
-          }
-          const data = await response.json();
-  
-          // Group questions by subject_course
-          const grouped = data.questions.reduce((acc: { [key: string]: any[] }, question: any) => {
-            const course = question.subject_course || "Unknown Course";
-            if (!acc[course]) {
-              acc[course] = [];
-            }
-            acc[course].push(question);
-            return acc;
-          }, {});
-          setGroupedQuestions(grouped); // Update state with grouped questions
-        } catch (error) {
-          console.error("Error fetching question banks:", error);
-        } finally {
-          //setLoading(false);
+  useEffect(() => {
+    const fetchQuestionBanks = async () => {
+      try {
+        const response = await fetch("/api/questions");
+        if (!response.ok) {
+          throw new Error("Failed to fetch question banks");
         }
-      };
-  
-      fetchQuestionBanks();
-      
-    }, []);
+        const data = await response.json();
 
-  
+        // Group questions by subject_course
+        const grouped = data.questions.reduce((acc: { [key: string]: any[] }, question: any) => {
+          const course = question.subject_course || "Unknown Course";
+          if (!acc[course]) {
+            acc[course] = [];
+          }
+          acc[course].push(question);
+          return acc;
+        }, {});
+        setGroupedQuestions(grouped); // Update state with grouped questions
+      } catch (error) {
+        console.error("Error fetching question banks:", error);
+      }
+    };
 
-
+    fetchQuestionBanks();
+  }, []);
 
   const handleCategoryToggle = (category: string) => {
     if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category))
+      setSelectedCategories(selectedCategories.filter((c) => c !== category));
     } else {
-      setSelectedCategories([...selectedCategories, category])
+      setSelectedCategories([...selectedCategories, category]);
     }
-  }
+  };
 
   const handleGeneratePreview = () => {
-    // In a real app, this would call an API to generate the test preview
-    setPreviewGenerated(true)
-  }
+    setPreviewGenerated(true);
+  };
+
+  const generateMarkdown = () => {
+    if (selectedQuestions.length === 0) {
+      alert("No questions selected!");
+      return;
+    }
+
+    const markdownContent = `
+# Test: ${testName || "Untitled Test"}
+
+#### Number of Versions: ${testVersions}
+
+---
+
+## Questions:
+
+${selectedQuestions
+        .map(
+          (question, index) => `
+### Question ${index + 1}
+
+**Question Text:** ${question.question_text}
+`
+        )
+        .join("\n")}
+
+---
+
+Proudly generated by accelGrading
+`;
+
+    return markdownContent;
+  };
+
+  const downloadPDF = () => {
+    if (selectedQuestions.length === 0) {
+      alert("No questions selected!");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text(`Test: ${testName || "Untitled Test"}`, 10, 10);
+
+    // Add questions
+    doc.setFontSize(12);
+    const questionsText = selectedQuestions
+      .map(
+        (question, index) =>
+          `Question ${index + 1}:\nCategory: ${question.category || "General"}\n${question.question_text}\n\n`
+      )
+      .join("\n");
+    doc.text(questionsText, 10, 20);
+
+    // Save the PDF
+    doc.save(`${testName || "test"}.pdf`);
+  };
+
+  const downloadMarkdown = (markdown: string) => {
+    const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${testName || "test"}.md`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   const totalQuestions = Object.entries(questionTypes)
     .filter(([_, enabled]) => enabled)
-    .reduce((sum, [type]) => sum + questionCounts[type as keyof typeof questionCounts], 0)
+    .reduce((sum, [type]) => sum + questionCounts[type as keyof typeof questionCounts], 0);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -143,364 +199,73 @@ export default function TestGenerationPage() {
                 <div className="space-y-2">
                   <Label htmlFor="question-bank">Question Bank</Label>
                   <Select
-                      value={selectedBank !== null ? selectedBank.toString() : ""}
-                      onValueChange={(value) => {
-                        setSelectedBank(value); // Store the string value directly
-                        
-                        setQuestionCounts({
-                          ...questionCounts,
-                          shortAnswer:  groupedQuestions[selectedBank.toString()].length || 0,
-                        })
-                      }}
-                    >
-                      <SelectTrigger id="question-bank">
-                        <SelectValue placeholder="Select a question bank" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.keys(groupedQuestions).length > 0 ? (
-                          Object.keys(groupedQuestions).map((key) => (
-                            <SelectItem key={key} value={key}>
-                              {key}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <p className="text-sm text-muted-foreground">Loading...</p>
-                        )}
-                      </SelectContent>
-                    </Select>
+                    value={selectedBank}
+                    onValueChange={(value) => setSelectedBank(value)}
+                  >
+                    <SelectTrigger id="question-bank">
+                      <SelectValue placeholder="Select a question bank" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(groupedQuestions).length > 0 ? (
+                        Object.keys(groupedQuestions).map((key) => (
+                          <SelectItem key={key} value={key}>
+                            {key}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <p className="text-sm text-muted-foreground">Loading...</p>
+                      )}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-4">
-                  <Label>Question Types</Label>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="multiple-choice"
-                          checked={questionTypes.multipleChoice}
-                          onCheckedChange={(checked) => setQuestionTypes({ ...questionTypes, multipleChoice: checked })}
-                        />
-                        <Label htmlFor="multiple-choice">Multiple Choice</Label>
-                      </div>
-
-                      {questionTypes.multipleChoice && (
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="mc-count" className="text-sm">
-                            Count:
-                          </Label>
-                          <Input
-                            id="mc-count"
-                            type="number"
-                            className="w-20"
-                            value={questionCounts.multipleChoice}
-                            onChange={(e) =>
-                              setQuestionCounts({
-                                ...questionCounts,
-                                multipleChoice: Number.parseInt(e.target.value) || 0,
-                              })
+                  <Label>Questions</Label>
+                  {selectedBank && groupedQuestions[selectedBank] ? (
+                    groupedQuestions[selectedBank].map((question) => (
+                      <div key={question.id} className="flex items-center gap-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedQuestions.some((q) => q.id === question.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedQuestions((prev) => [...prev, question]);
+                            } else {
+                              setSelectedQuestions((prev) =>
+                                prev.filter((q) => q.id !== question.id)
+                              );
                             }
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="true-false"
-                          checked={questionTypes.trueFalse}
-                          onCheckedChange={(checked) => setQuestionTypes({ ...questionTypes, trueFalse: checked })}
+                          }}
                         />
-                        <Label htmlFor="true-false">True/False</Label>
-                      </div>
-
-                      {questionTypes.trueFalse && (
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="tf-count" className="text-sm">
-                            Count:
-                          </Label>
-                          <Input
-                            id="tf-count"
-                            type="number"
-                            className="w-20"
-                            value={questionCounts.trueFalse}
-                            onChange={(e) =>
-                              setQuestionCounts({
-                                ...questionCounts,
-                                trueFalse: Number.parseInt(e.target.value) || 0,
-                              })
-                            }
-                          />
+                        <div>
+                          <p className="font-medium">{question.question_text}</p>
+                          <p className="text-sm text-muted-foreground">{question.category}</p>
                         </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="short-answer"
-                          checked={questionTypes.shortAnswer}
-                          onCheckedChange={(checked) => setQuestionTypes({ ...questionTypes, shortAnswer: checked })}
-                        />
-                        <Label htmlFor="short-answer">Short Answer/Description</Label>
                       </div>
-
-                      {questionTypes.shortAnswer && (
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="sa-count" className="text-sm">
-                            Count:
-                          </Label>
-                          <Input
-                            id="sa-count"
-                            type="number"
-                            className="w-20"
-                            value={questionCounts.shortAnswer}
-                            onChange={(e) =>
-                              setQuestionCounts({
-                                ...questionCounts,
-                                shortAnswer: Number.parseInt(e.target.value) || 0,
-                              })
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="versions">Number of Test Versions</Label>
-                    <span className="text-sm">{testVersions}</span>
-                  </div>
-                  <Slider
-                    id="versions"
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={[testVersions]}
-                    onValueChange={(value) => setTestVersions(value[0])}
-                  />
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No questions available</p>
+                  )}
                 </div>
 
                 <Button
                   className="w-full"
-                  onClick={handleGeneratePreview}
-                  disabled={!selectedBank || totalQuestions === 0 || !testName}
+                  onClick={generateMarkdown}
+                  disabled={selectedQuestions.length === 0 || !testName}
                 >
-                  <Wand2 className="h-4 w-4 mr-2" />
-                  Generate Test Blueprint
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Markdown
+                </Button>
+                <Button
+                  className="w-full"
+                  onClick={downloadPDF}
+                  disabled={selectedQuestions.length === 0 || !testName}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
                 </Button>
               </CardContent>
             </Card>
-
-            {previewGenerated && (
-              <Card className="mt-8">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Eye className="h-5 w-5" />
-                    Test Blueprint Preview
-                  </CardTitle>
-                  <CardDescription>
-                    This is how your test will be structured. The actual content will vary across versions.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="border rounded-lg p-6 space-y-8">
-                    <div className="text-center space-y-2">
-                      <h3 className="text-xl font-bold">{testName}</h3>
-                      <p className="text-muted-foreground">Version: Blueprint</p>
-                      {/*<p className="text-sm">Total Points: {totalQuestions * 5}</p> */}
-                    </div>
-
-                    {questionTypes.multipleChoice && questionCounts.multipleChoice > 0 && (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold border-b pb-2">
-                          Multiple Choice Questions ({questionCounts.multipleChoice})
-                        </h4>
-
-                        -------------------------------
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <p className="font-medium">1. What is the derivative of f(x) = x² + 3x - 2?</p>
-                            <div className="grid grid-cols-2 gap-2">
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border border-primary flex items-center justify-center">
-                                  <div className="h-2 w-2 rounded-full bg-primary"></div>
-                                </div>
-                                <span>a) 2x + 3</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>b) x² + 3</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>c) 2x</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>d) x + 3</span>
-                              </div>
-                            </div>
-                          </div>
-
-
-                          <p className="text-muted-foreground text-sm italic">
-                            + {questionCounts.multipleChoice - 2} more multiple choice questions
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {questionTypes.trueFalse && questionCounts.trueFalse > 0 && (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold border-b pb-2">
-                          True/False Questions ({questionCounts.trueFalse})
-                        </h4>
-
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <p className="font-medium">1. The derivative of a constant is always zero.</p>
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border border-primary flex items-center justify-center">
-                                  <div className="h-2 w-2 rounded-full bg-primary"></div>
-                                </div>
-                                <span>True</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>False</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <p className="font-medium">2. The integral of x² is x³.</p>
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border"></div>
-                                <span>True</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full border border-primary flex items-center justify-center">
-                                  <div className="h-2 w-2 rounded-full bg-primary"></div>
-                                </div>
-                                <span>False</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {questionCounts.trueFalse > 2 && (
-                            <p className="text-muted-foreground text-sm italic">
-                              + {questionCounts.trueFalse - 2} more true/false questions
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {questionTypes.shortAnswer && questionCounts.shortAnswer > 0 && (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold border-b pb-2">
-                          Short Answer Questions ({questionCounts.shortAnswer})
-                        </h4>
-
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <p className="font-medium">1. Explain the concept of a limit and provide an example.</p>
-                            <div className="border border-dashed rounded p-3 h-24 flex items-center justify-center text-muted-foreground">
-                              Student answer area
-                            </div>
-                          </div>
-
-                          {questionCounts.shortAnswer > 1 && (
-                            <p className="text-muted-foreground text-sm italic">
-                              + {questionCounts.shortAnswer - 1} more short answer questions
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex justify-between">
-                    <Button variant="outline">
-                      <Eye className="h-4 w-4 mr-2" />
-                      Preview All Versions
-                    </Button>
-                    <Button>
-                      <Download className="h-4 w-4 mr-2" />
-                      Generate {testVersions} Versions
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Test Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Test Name</p>
-                  <p className="text-muted-foreground">{testName || "Not specified"}</p>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Question Bank</p>
-                  <p className="text-muted-foreground">{ selectedBank || "Not selected"}</p>
-                </div>
-
-                {selectedCategories.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">Selected Categories</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCategories.map((category) => (
-                        <Badge key={category} variant="outline">
-                          {category}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Question Types</p>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {questionTypes.multipleChoice && <li>Multiple Choice: {questionCounts.multipleChoice}</li>}
-                    {questionTypes.trueFalse && <li>True/False: {questionCounts.trueFalse}</li>}
-                    {questionTypes.shortAnswer && <li>Short Answer: {questionCounts.shortAnswer}</li>}
-                  </ul>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Total Questions</p>
-                  <p className="text-muted-foreground">{totalQuestions}</p>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Test Versions</p>
-                  <p className="text-muted-foreground">{testVersions}</p>
-                </div>
-
-                {/*
-                <div className="pt-4 border-t">
-                  <p className="text-sm font-medium">Estimated Completion Time</p>
-                  <p className="text-muted-foreground">
-                    {totalQuestions > 0 ? `${Math.ceil(totalQuestions * 1.5)} minutes per student` : "Not available"}
-                  </p>
-                </div>*/}
-
-              </CardContent>
-            </Card>
-
-      
           </div>
         </div>
       </main>
@@ -516,6 +281,5 @@ export default function TestGenerationPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
-
