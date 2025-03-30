@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { addQuestion } from '@/middleware/midw';
+import { create } from '@/middleware/midw';
 
 export async function POST(req: Request) {
     try {
-        const { category, question_text, subject_course, difficulty } = await req.json();
+        const { category, question_text, subject_course} = await req.json();
 
         // Validate input
-        if (!category || !question_text || !subject_course || !difficulty) {
+        if (!category || !question_text || !subject_course) {
             return NextResponse.json(
                 { success: false, message: 'All fields are required.' },
                 { status: 400 }
@@ -14,12 +14,10 @@ export async function POST(req: Request) {
         }
 
         // Add the question to the database
-        const newQuestion = await addQuestion({
+        const newQuestion = await create(
             category,
             question_text,
-            subject_course,
-            difficulty,
-        });
+            subject_course);
 
         // Return the newly created question
         return NextResponse.json(

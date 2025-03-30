@@ -65,12 +65,24 @@ export async function getAllQuestions() {
     }
 }
 
-export async function create({ category, question_text, subject_course }) {
+export async function create( category, question_text, subject_course) {
+
+    let pool;
     try {
+        // Create a connection pool
+        pool = mysql.createPool({
+            host: HOST.split(':')[0],
+            port: HOST.split(':')[1],
+            user: USER,
+            password: PASSWORD,
+            database: DATABASE,
+            ssl: {}, // Enable SSL if required
+        });
+
         // Use parameterized query to safely insert data into the database
         const query = `
             INSERT INTO question_bank (category, question_text, subject_course)
-            VALUES (?, ?, ?);
+            VALUES (?,?,?);
         `;
         const values = [category, question_text, subject_course];
 
@@ -79,11 +91,14 @@ export async function create({ category, question_text, subject_course }) {
 
         console.log('Question added successfully:', result);
 
-        // Return the ID of the newly inserted question
-        return result.insertId;
+        return { success: true};
     } catch (err) {
-        console.error('Error adding question:', err);
-        throw new Error('Failed to add question'); // Throw an error to be handled by the caller
+        console.error('ERROR', err);
+        return { success: false, message: 'An error occurred during login' };
+    } finally {
+        if (pool) {
+            await pool.end(); // Close the connection pool
+        }
     }
 }
 
@@ -163,4 +178,4 @@ export async function validateLogin(username, password) {
 
 
 // { category, question_text, subject_course }
-create('Leitura', 'Descreva, de forma sucinta, a obra mais conhecida de Camilo Castelo Branco, Amor de Perdição', 'Português');
+//create("Leitura", "Descreva, de forma sucinta, a obra mais conhecida de Camilo Castelo Branco, Amor de Perdição", "Português");

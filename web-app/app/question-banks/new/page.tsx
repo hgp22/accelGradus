@@ -23,7 +23,7 @@ export default function AddQuestionPage() {
         }
 
         try {
-            const response = await fetch("/api/questions", {
+            const response = await fetch("/api/addquestion", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -31,10 +31,11 @@ export default function AddQuestionPage() {
                 body: JSON.stringify({
                     question_text: questionText,
                     category,
-                    difficulty,
                     subject_course: course,
                 }),
             });
+
+            console.log(response);
 
             if (!response.ok) {
                 throw new Error("Failed to add question");
