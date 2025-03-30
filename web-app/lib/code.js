@@ -148,12 +148,12 @@ export const genQuestions = async (filesL, prompt) => {
         // Attempt to parse the JSON response
         try {
             const parsedOutput = JSON.parse(output);
-            console.log("Parsed Output:", parsedOutput);
+            //console.log("Parsed Output:", parsedOutput);
             return parsedOutput;
         } catch (error) {
-            console.error("Failed to parse JSON. Raw Output:", output);
+            //console.log("Failed to parse JSON. Raw Output:", output);
             const again = extractJSON(output)
-            console.log("Extracted JSON:", again)
+            //console.log("Extracted JSON:", again)
             return again;
         }
     } catch (error) {
