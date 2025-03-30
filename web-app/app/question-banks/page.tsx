@@ -144,7 +144,6 @@ export default function QuestionBanksPage() {
                           const result = await response.json();
                           if (result.success) {
                             alert("Course deleted successfully!");
-                            // Update the UI by removing the course from groupedQuestions
                             const updatedGroupedQuestions = { ...groupedQuestions };
                             delete updatedGroupedQuestions[course];
                             setGroupedQuestions(updatedGroupedQuestions);
@@ -153,7 +152,6 @@ export default function QuestionBanksPage() {
                           }
                         } catch (error) {
                           console.error("Error deleting course:", error);
-                          alert("An error occurred while deleting the course. Please try again.");
                         }
                       }}
                     >

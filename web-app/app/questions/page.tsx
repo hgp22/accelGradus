@@ -76,11 +76,13 @@ export default function QuestionsPage() {
 
 
 
+    /*
     // Function to remove a question from the list
     const handleRemoveQuestion = (id: string) => {
         //console.log("Removing question with id:", id);
         //setQuestions((prevQuestions) => prevQuestions.filter((question) => question.id !== id));
     };
+    */
 
     const handleToggleHarder = (question: any) => {
         setHarder(!harder);
@@ -142,9 +144,57 @@ export default function QuestionsPage() {
 
                                     <Button
                                         variant="destructive"
-                                        onClick={() => handleRemoveQuestion(question.id)}
+                                        size="sm"
+                                        onClick={async () => {
+                                            try {
+                                                const response = await fetch("/api/removequestion", {
+                                                    method: "DELETE",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                    },
+                                                    body: JSON.stringify({
+                                                        category: question.category, // Use question.category
+                                                        question_text: question.question_text, // Use question.question_text
+                                                        subject_course: question.subject_course, // Use question.subject_course
+                                                    }),
+                                                });
+
+                                                if (!response.ok) {
+                                                    throw new Error("Failed to delete the question");
+                                                }
+
+                                                const result = await response.json();
+                                                if (result.success) {
+                                                    alert("Question deleted successfully!");
+                                                    // Refetch the questions from the API
+                                                    const fetchQuestions = async () => {
+                                                        try {
+                                                            const response = await fetch("/api/questions");
+                                                            if (!response.ok) {
+                                                                throw new Error("Failed to fetch questions");
+                                                            }
+                                                            const data = await response.json();
+                                                            // Filter questions by the selected course
+                                                            const filteredQuestions = data.questions.filter(
+                                                                (question: any) => question.subject_course === selectedCourse
+                                                            );
+                                                            setQuestions(filteredQuestions); // Update state with filtered questions
+                                                        } catch (error) {
+                                                            console.error("Error fetching questions:", error);
+                                                            alert("Failed to reload questions. Please try again.");
+                                                        }
+                                                    };
+                                                    await fetchQuestions();
+                                                } else {
+                                                    alert(result.message || "Failed to delete the question");
+                                                }
+                                            } catch (error) {
+                                                console.error("Error deleting question:", error);
+                                                alert("An error occurred while deleting the question. Please try again.");
+                                            }
+                                        }}
                                     >
-                                        Remove
+                                        Delete
                                     </Button>
                                 </CardContent>
                             </Card>
