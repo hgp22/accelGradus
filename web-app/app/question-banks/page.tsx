@@ -123,16 +123,43 @@ export default function QuestionBanksPage() {
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-xl">{course}</CardTitle>
+
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => {
-                        setCourseToDelete(course);
-                        setDeleteDialogOpen(true);
+                      onClick={async () => {
+                        try {
+                          const response = await fetch("/api/removecategory", {
+                            method: "DELETE", // Use DELETE method
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ subject_course: course }),
+                          });
+
+                          if (!response.ok) {
+                            throw new Error("Failed to delete the course");
+                          }
+
+                          const result = await response.json();
+                          if (result.success) {
+                            alert("Course deleted successfully!");
+                            // Update the UI by removing the course from groupedQuestions
+                            const updatedGroupedQuestions = { ...groupedQuestions };
+                            delete updatedGroupedQuestions[course];
+                            setGroupedQuestions(updatedGroupedQuestions);
+                          } else {
+                            alert(result.message || "Failed to delete the course");
+                          }
+                        } catch (error) {
+                          console.error("Error deleting course:", error);
+                          alert("An error occurred while deleting the course. Please try again.");
+                        }
                       }}
                     >
                       Delete
                     </Button>
+
                   </div>
                   <CardDescription>
                     {questions.length} questions

@@ -65,6 +65,45 @@ export async function getAllQuestions() {
     }
 }
 
+export async function deleteCourse(subject_course){
+    let pool;
+    try {
+        // Create a connection pool
+        pool = mysql.createPool({
+            host: HOST.split(':')[0],
+            port: HOST.split(':')[1],
+            user: USER,
+            password: PASSWORD,
+            database: DATABASE,
+            ssl: {}, // Enable SSL if required
+        });
+
+        /*
+        DELETE FROM question_bank WHERE category = 'testetsete';
+        */
+
+        // Use parameterized query to safely insert data into the database
+        const query = `
+            delete from question_bank where subject_course=?;
+        `;
+        const values = [subject_course];
+
+        // Execute the query
+        const [result] = await pool.query(query, values);
+
+        console.log('Question added successfully:', result);
+
+        return { success: true };
+    } catch (err) {
+        console.error('ERROR', err);
+        return { success: false, message: 'An error occurred during login' };
+    } finally {
+        if (pool) {
+            await pool.end(); // Close the connection pool
+        }
+    }
+}
+
 export async function create( category, question_text, subject_course) {
 
     let pool;
@@ -179,3 +218,6 @@ export async function validateLogin(username, password) {
 
 // { category, question_text, subject_course }
 //create("Leitura", "Descreva, de forma sucinta, a obra mais conhecida de Camilo Castelo Branco, Amor de Perdição", "Português");
+//deleteQuestion("Teste","Teste","Teste");
+
+//deleteCourse("teste");
